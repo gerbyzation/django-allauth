@@ -15,6 +15,7 @@ from django import forms
 from django.contrib import messages
 from django.contrib.auth import login as django_login
 from django.contrib.auth import logout as django_logout
+from django.contrib.auth.password_validation import validate_password
 
 try:
     from django.utils.encoding import force_text
@@ -256,10 +257,7 @@ class DefaultAccountAdapter(object):
         Validates a password. You can hook into this if you want to
         restric the allowed password choices.
         """
-        min_length = app_settings.PASSWORD_MIN_LENGTH
-        if len(password) < min_length:
-            raise forms.ValidationError(_("Password must be a minimum of {0} "
-                                          "characters.").format(min_length))
+        validate_password(password)
         return password
 
     def add_message(self, request, level, message_template,
